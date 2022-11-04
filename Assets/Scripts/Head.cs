@@ -12,7 +12,7 @@ public class RotationHandler
     private bool hasTapped;
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(input))
         {
             hasTapped = true;
         }
@@ -30,8 +30,22 @@ public class RotationHandler
 
 public class Head : MonoBehaviour
 {
+    // 16: 9
+    // 16 : 9
+    // 160 :    90 x  10 pixels
+    // 1600 x  900 x 100 pixels
+    // 1920 x 1080 x 120 pixels
+    
     public RotationHandler[] rotationHandlers;
-    private GameObject someGameObject;
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.TryGetComponent(out Pikachu pikachu))
+        {
+            // grow logic
+            pikachu.OnEaten();
+        }
+    }
 
     void Update()
     {
@@ -47,6 +61,9 @@ public class Head : MonoBehaviour
         {
             rotationHandlers[i].FixedUpdate();
         }
-        transform.position += transform.up;
+        Vector3 position = transform.position + transform.up;
+        position.x = (position.x + 13.5f) % 9 - 4.5f;
+        position.y = (position.y + 13.5f) % 9 - 4.5f;
+        transform.position = position;
     }
 }
